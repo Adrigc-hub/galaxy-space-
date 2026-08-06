@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmic Space | Isolated Launcher</title>
+  <style>
+    :root {
+      --bg-dark: #0a0c14;
+      --panel-bg: rgba(18, 22, 36, 0.75);
+      --accent-cyan: #00f0ff;
+      --accent-red: #ff2a5f;
+      --text-main: #ffffff;
+      --text-dim: #8a99ad;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(255, 42, 95, 0.08) 0%, transparent 40%);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      height: 45px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 12, 20, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      color: var(--accent-cyan);
+    }
+
+    .brand-icon {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #00f0ff, #7000ff);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .system-status {
+      display: flex;
+      gap: 15px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .status-badge {
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--accent-cyan);
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+
+    /* MAIN CONTAINER */
+    .container {
+      flex: 1;
+      display: flex;
+      padding: 15px;
+      gap: 15px;
+    }
+
+    /* LEFT SIDEBAR (APPS) */
+    .sidebar {
+      width: 220px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .app-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .app-item:hover, .app-item.active {
+      background: rgba(0, 240, 255, 0.15);
+      border-left: 4px solid var(--accent-cyan);
+    }
+
+    .app-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #222;
+    }
+
+    .app-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* MAIN DISPLAY AREA */
+    .main-view {
+      flex: 1;
+      background: var(--panel-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-view::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,42,95,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .app-header {
+      z-index: 1;
+    }
+
+    .app-title {
+      font-size: 38px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .sandbox-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #00ff88;
+      font-size: 13px;
+      background: rgba(0, 255, 136, 0.1);
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+
+    .action-bar {
+      z-index: 1;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .btn-launch {
+      background: linear-gradient(90deg, #ff2a5f, #ff7e00);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 42, 95, 0.4);
+      transition: transform 0.2s;
+    }
+
+    .btn-launch:hover {
+      transform: scale(1.03);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 14px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    /* PRIVACY LOCK SCREEN */
+    .privacy-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 12, 20, 0.85);
+      backdrop-filter: blur(25px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .privacy-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .lock-card {
+      background: rgba(20, 25, 40, 0.9);
+      padding: 30px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      text-align: center;
+      width: 300px;
+    }
+
+    .lock-card input {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 18px;
+      letter-spacing: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="brand">
+      <div class="brand-icon">🚀</div>
+      <span>COSMIC SPACE</span>
+    </div>
+    <div class="system-status">
+      <span class="status-badge">Aislamiento: Activo</span>
+      <span id="pwa-status">PWA Listo</span>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="container">
+    <!-- LEFT MENU -->
+    <div class="sidebar">
+      <div class="app-item active" onclick="selectApp('Fortnite', 'https://via.placeholder.com/150/00f0ff/ffffff?text=FN')">
+        <img class="app-icon" src="https://via.placeholder.com/50/00f0ff/ffffff?text=FN" alt="Fortnite" />
+        <span class="app-name">Fortnite</span>
+      </div>
+      <div class="app-item" onclick="selectApp('Terraria', 'https://via.placeholder.com/150/ff2a5f/ffffff?text=TR')">
+        <img class="app-icon" src="https://via.placeholder.com/50/ff2a5f/ffffff?text=TR" alt="Terraria" />
+        <span class="app-name">Terraria</span>
+      </div>
+      <div class="app-item" onclick="selectApp('Roblox', 'https://via.placeholder.com/150/7000ff/ffffff?text=RB')">
+        <img class="app-icon" src="https://via.placeholder.com/50/7000ff/ffffff?text=RB" alt="Roblox" />
+        <span class="app-name">Roblox</span>
+      </div>
+      <div class="app-item" onclick="selectApp('Clash Royale', 'https://via.placeholder.com/150/00ff88/ffffff?text=CR')">
+        <img class="app-icon" src="https://via.placeholder.com/50/00ff88/ffffff?text=CR" alt="Clash Royale" />
+        <span class="app-name">Clash Royale</span>
+      </div>
+    </div>
+
+    <!-- MAIN DISPLAY -->
+    <div class="main-view">
+      <div class="app-header">
+        <h1 id="selected-title" class="app-title">Fortnite</h1>
+        <div class="sandbox-tag">
+          <span>🛡️</span> ENTORNO AISLADO Y OPTIMIZADO
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn-launch" onclick="launchApp()">▶ Iniciar Aplicación</button>
+        <button class="btn-secondary" onclick="lockScreen()">🔒 Bloquear</button>
+        <button class="btn-secondary" id="install-btn" style="display:none;">📥 Instalar App</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVACY LOCK OVERLAY -->
+  <div class="privacy-overlay" id="privacy-overlay">
+    <div class="lock-card">
+      <h2>Espacio Protegido</h2>
+      <p style="font-size: 12px; color: var(--text-dim); margin-top: 5px;">Ingresa la contraseña para desbloquear</p>
+      <input type="password" id="pin-input" placeholder="••••" maxlength="4" />
+      <button class="btn-launch" style="width: 100%;" onclick="unlockScreen()">Desbloquear</button>
+    </div>
+  </div>
+
+  <script>
+    let currentPin = "1234";
+
+    function selectApp(name, icon) {
+      document.getElementById('selected-title').innerText = name;
+      document.querySelectorAll('.app-item').forEach(item => {
+        item.classList.remove('active');
+        if(item.innerText.includes(name)) item.classList.add('active');
+      });
+    }
+
+    function launchApp() {
+      alert("Iniciando contenedor aislado de " + document.getElementById('selected-title').innerText);
+    }
+
+    // Auto-bloqueo por privacidad cuando la app pierde el foco (minimizar / cambiar pestaña)
+    window.addEventListener('blur', () => {
+      lockScreen();
+    });
+
+    function lockScreen() {
+      document.getElementById('privacy-overlay').classList.add('active');
+    }
+
+    function unlockScreen() {
+      const pin = document.getElementById('pin-input').value;
+      if (pin === currentPin || currentPin === "") {
+        document.getElementById('privacy-overlay').classList.remove('active');
+        document.getElementById('pin-input').value = "";
+      } else {
+        alert("Contraseña incorrecta (PIN por defecto: 1234)");
+      }
+    }
+
+    // Soporte de instalación PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const installBtn = document.getElementById('install-btn');
+      installBtn.style.display = 'block';
+      installBtn.addEventListener('click', () => {
+        deferredPrompt.prompt();
+      });
+    });
+  </script>
+</body>
+</html>

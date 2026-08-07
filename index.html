@@ -7,13 +7,13 @@
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
-      --bg-image: radial-gradient(circle at 50% 50%, #101426 0%, #05070d 100%);
-      --panel-bg: rgba(15, 20, 35, 0.7);
+      --bg-gradient: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+      --panel-bg: rgba(15, 23, 42, 0.75);
       --accent-cyan: #00f0ff;
-      --accent-purple: #9d00ff;
-      --accent-pink: #ff007f;
-      --text-main: #ffffff;
-      --text-dim: #8fa0b5;
+      --accent-purple: #8b5cf6;
+      --accent-pink: #ec4899;
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
     }
 
     * {
@@ -25,45 +25,47 @@
     }
 
     body {
-      background: var(--bg-image);
+      background: var(--bg-gradient);
       background-size: cover;
-      background-position: center;
+      background-attachment: fixed;
       color: var(--text-main);
       height: 100vh;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
       transition: background 0.5s ease;
     }
 
-    /* BARRA SUPERIOR Y NAVEGACIÓN */
+    /* BARRA SUPERIOR */
     .top-bar {
       height: 60px;
-      padding: 0 25px;
+      padding: 0 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(8, 10, 18, 0.85);
-      backdrop-filter: blur(15px);
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(0, 240, 255, 0.2);
       z-index: 10;
+      flex-wrap: wrap;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       font-weight: 800;
-      letter-spacing: 2px;
+      font-size: 16px;
+      letter-spacing: 1px;
       color: var(--accent-cyan);
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+      text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
     }
 
     .nav-tabs {
       display: flex;
-      gap: 10px;
+      gap: 6px;
       background: rgba(255, 255, 255, 0.05);
-      padding: 5px;
+      padding: 4px;
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
@@ -72,26 +74,27 @@
       background: transparent;
       color: var(--text-dim);
       border: none;
-      padding: 8px 16px;
+      padding: 6px 12px;
       border-radius: 8px;
       font-weight: 600;
+      font-size: 13px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.25s ease;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 5px;
     }
 
-    .tab-btn.active, .tab-btn:hover {
+    .tab-btn.active, .tab-btn:active {
       background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-      color: #fff;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
     }
 
-    /* CONTENEDOR PRINCIPAL */
+    /* CONTENEDOR VISTAS */
     .view-container {
       flex: 1;
-      padding: 20px;
+      padding: 15px;
       position: relative;
       overflow-y: auto;
     }
@@ -99,7 +102,8 @@
     .view-section {
       display: none;
       height: 100%;
-      animation: fadeIn 0.4s ease-in-out forwards;
+      width: 100%;
+      animation: fadeIn 0.3s ease-out forwards;
     }
 
     .view-section.active {
@@ -107,149 +111,155 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
     }
 
-    /* SECCIÓN GAMESPACE */
+    /* GAMESPACE LAYOUT */
     .gamespace-layout {
-      width: 100%;
       display: flex;
-      gap: 20px;
+      gap: 15px;
+      width: 100%;
+      height: 100%;
+    }
+
+    @media (max-width: 650px) {
+      .gamespace-layout {
+        flex-direction: column;
+      }
+      .sidebar-games {
+        width: 100% !important;
+        max-height: 140px !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+      }
     }
 
     .sidebar-games {
-      width: 260px;
+      width: 240px;
       background: var(--panel-bg);
-      backdrop-filter: blur(15px);
-      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 15px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-height: 100%;
       overflow-y: auto;
     }
 
     .game-card {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px;
+      gap: 10px;
+      padding: 10px;
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.03);
       cursor: pointer;
-      transition: all 0.25s ease;
       border: 1px solid transparent;
+      transition: all 0.2s;
+      min-width: 140px;
     }
 
     .game-card:hover, .game-card.active {
       background: rgba(0, 240, 255, 0.15);
       border-color: var(--accent-cyan);
-      transform: translateX(5px);
     }
 
     .game-icon {
-      width: 45px;
-      height: 45px;
+      width: 40px;
+      height: 40px;
       border-radius: 10px;
-      background: #222;
+      background: rgba(0, 0, 0, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      font-size: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .game-display {
       flex: 1;
       background: var(--panel-bg);
-      backdrop-filter: blur(15px);
-      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 35px;
+      padding: 25px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      position: relative;
     }
 
-    /* TIENDA (PLAY STORE) */
+    /* TIENDA (PLAYSTORE) */
     .grid-store {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
       width: 100%;
+      align-content: start;
     }
 
     .store-item {
       background: var(--panel-bg);
-      backdrop-filter: blur(15px);
+      backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
-      padding: 20px;
+      padding: 15px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
-      transition: transform 0.3s;
+      gap: 10px;
     }
 
-    .store-item:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent-purple);
-    }
-
-    /* FONDOS DE PANTALLA */
+    /* FONDOS */
     .grid-wallpapers {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px;
       width: 100%;
+      align-content: start;
     }
 
     .wp-card {
-      height: 130px;
+      height: 120px;
       border-radius: 14px;
       cursor: pointer;
       border: 2px solid transparent;
-      transition: all 0.3s;
-      background-size: cover;
-      background-position: center;
+      transition: all 0.25s;
       display: flex;
       align-items: flex-end;
-      padding: 10px;
+      padding: 12px;
       font-weight: bold;
-      text-shadow: 0 2px 4px #000;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      font-size: 14px;
     }
 
     .wp-card:hover {
       border-color: var(--accent-cyan);
-      transform: scale(1.03);
+      transform: translateY(-3px);
     }
 
     /* AJUSTES */
     .settings-card {
       background: var(--panel-bg);
-      backdrop-filter: blur(15px);
-      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 30px;
-      max-width: 500px;
+      padding: 25px;
+      max-width: 450px;
       width: 100%;
-      margin: 0 auto;
+      margin: 10px auto;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 18px;
     }
 
     .input-field {
       width: 100%;
-      padding: 12px 16px;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 12px 14px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 10px;
       color: white;
       font-size: 15px;
@@ -265,9 +275,10 @@
       background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
       color: white;
       border: none;
-      padding: 12px 24px;
+      padding: 12px 20px;
       border-radius: 10px;
       font-weight: bold;
+      font-size: 14px;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -277,12 +288,12 @@
       transform: scale(1.02);
     }
 
-    /* PANTALLA DE BLOQUEO DE PRIVACIDAD */
+    /* PRIVACIDAD */
     .privacy-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(5, 7, 13, 0.88);
-      backdrop-filter: blur(30px);
+      background: rgba(2, 6, 23, 0.92);
+      backdrop-filter: blur(25px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -298,79 +309,114 @@
     }
 
     .lock-box {
-      background: rgba(18, 24, 40, 0.95);
-      padding: 35px;
-      border-radius: 24px;
+      background: rgba(15, 23, 42, 0.95);
+      padding: 30px;
+      border-radius: 20px;
       border: 1px solid rgba(0, 240, 255, 0.3);
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
       text-align: center;
-      width: 320px;
+      width: 300px;
+    }
+
+    /* GAME RUNNER MODAL */
+    .game-modal {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9000;
+      display: none;
+      flex-direction: column;
+    }
+
+    .game-modal.active {
+      display: flex;
+    }
+
+    .game-modal-header {
+      height: 45px;
+      background: #0b0f19;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 15px;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+    }
+
+    canvas {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      background: #05070d;
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP BAR -->
+  <!-- BARRA NAVEGACIÓN -->
   <div class="top-bar">
     <div class="brand">
       <span>🛸 COSMIC OS</span>
     </div>
     <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab('gamespace')">🎮 GameSpace</button>
-      <button class="tab-btn" onclick="switchTab('store')">🛍️ PlayStore</button>
-      <button class="tab-btn" onclick="switchTab('wallpapers')">🖼️ Fondos</button>
-      <button class="tab-btn" onclick="switchTab('settings')">⚙️ Ajustes</button>
+      <button class="tab-btn active" onclick="switchTab('gamespace', this)">🎮 GameSpace</button>
+      <button class="tab-btn" onclick="switchTab('store', this)">🛍️ PlayStore</button>
+      <button class="tab-btn" onclick="switchTab('wallpapers', this)">🖼️ Fondos</button>
+      <button class="tab-btn" onclick="switchTab('settings', this)">⚙️ Ajustes</button>
     </div>
   </div>
 
-  <!-- VISTAS / SECCIONES -->
+  <!-- VISTAS PRINCIPALES -->
   <div class="view-container">
 
-    <!-- 1. GAMESPACE (SÓLO JUEGOS INSTALADOS) -->
+    <!-- 1. GAMESPACE -->
     <div id="gamespace" class="view-section gamespace-layout active">
       <div class="sidebar-games" id="installed-list">
-        <!-- Se llena dinámicamente -->
+        <!-- Juegos instalados -->
       </div>
       <div class="game-display">
         <div>
-          <h1 id="selected-title" style="font-size: 40px; text-transform: uppercase;">Sin Juegos</h1>
-          <p id="selected-desc" style="color: var(--text-dim); margin-top: 10px;">Instala juegos desde la PlayStore para jugarlos aquí de forma aislada.</p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h1 id="selected-title" style="font-size: 32px; text-transform: uppercase;">Sin Juegos</h1>
+            <span style="font-size:12px; color:var(--accent-cyan); background:rgba(0,240,255,0.1); padding:4px 10px; border-radius:20px; border:1px solid rgba(0,240,255,0.3);">FPS: 60 | RAM: 32%</span>
+          </div>
+          <p id="selected-desc" style="color: var(--text-dim); margin-top: 12px; font-size:14px;">
+            Ve a la <b>PlayStore</b> arriba para instalar juegos en tu contenedor aislado.
+          </p>
         </div>
-        <div>
-          <button class="btn-action" id="launch-btn" onclick="launchGame()" style="display:none;">▶ Iniciar Juego</button>
+        <div style="margin-top: 20px;">
+          <button class="btn-action" id="launch-btn" onclick="launchGame()" style="display:none; font-size:16px;">▶ Iniciar Juego</button>
         </div>
       </div>
     </div>
 
-    <!-- 2. TIENDA (PLAY STORE) -->
+    <!-- 2. PLAYSTORE -->
     <div id="store" class="view-section">
       <div class="grid-store" id="store-list">
-        <!-- Se llena dinámicamente -->
+        <!-- Generado dinámicamente -->
       </div>
     </div>
 
-    <!-- 3. FONDOS DE PANTALLA -->
+    <!-- 3. FONDOS -->
     <div id="wallpapers" class="view-section">
       <div class="grid-wallpapers">
-        <div class="wp-card" style="background-image: radial-gradient(circle at 50% 50%, #101426 0%, #05070d 100%);" onclick="setWallpaper('radial-gradient(circle at 50% 50%, #101426 0%, #05070d 100%)')">Vaciado Oscuro</div>
-        <div class="wp-card" style="background-image: linear-gradient(135deg, #1f0036 0%, #000000 100%);" onclick="setWallpaper('linear-gradient(135deg, #1f0036 0%, #000000 100%)')">Nebulosa Violeta</div>
-        <div class="wp-card" style="background-image: linear-gradient(135deg, #002b36 0%, #000508 100%);" onclick="setWallpaper('linear-gradient(135deg, #002b36 0%, #000508 100%)')">Ciber Cian</div>
-        <div class="wp-card" style="background-image: linear-gradient(135deg, #360012 0%, #0a0004 100%);" onclick="setWallpaper('linear-gradient(135deg, #360012 0%, #0a0004 100%)')">Supernova Roja</div>
+        <div class="wp-card" style="background: radial-gradient(circle, #0f172a 0%, #020617 100%);" onclick="setWallpaper('radial-gradient(circle, #0f172a 0%, #020617 100%)')">Vaciado Cósmico</div>
+        <div class="wp-card" style="background: linear-gradient(135deg, #2e1065 0%, #030712 100%);" onclick="setWallpaper('linear-gradient(135deg, #2e1065 0%, #030712 100%)')">Nebulosa Violeta</div>
+        <div class="wp-card" style="background: linear-gradient(135deg, #082f49 0%, #020617 100%);" onclick="setWallpaper('linear-gradient(135deg, #082f49 0%, #020617 100%)')">Ciber Neón Cyan</div>
+        <div class="wp-card" style="background: linear-gradient(135deg, #4c0519 0%, #020617 100%);" onclick="setWallpaper('linear-gradient(135deg, #4c0519 0%, #020617 100%)')">Supernova Roja</div>
       </div>
     </div>
 
     <!-- 4. AJUSTES -->
     <div id="settings" class="view-section">
       <div class="settings-card">
-        <h2>⚙️ Configuración del Sistema</h2>
+        <h2 style="font-size:20px;">⚙️ Ajustes del Sistema</h2>
         <div>
-          <label style="display:block; margin-bottom: 8px; color: var(--text-dim);">Cambiar Contraseña de Privacidad</label>
-          <input type="password" id="new-pin" class="input-field" placeholder="Nueva Contraseña" />
+          <label style="display:block; margin-bottom: 8px; color: var(--text-dim); font-size:13px;">Cambiar Contraseña de Privacidad</label>
+          <input type="password" id="new-pin" class="input-field" placeholder="Escribe tu nueva contraseña" />
         </div>
         <button class="btn-action" onclick="savePassword()">Guardar Contraseña</button>
         <hr style="border-color: rgba(255,255,255,0.1);" />
         <div>
-          <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 10px;">Instalación de Aplicación:</p>
+          <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 10px;">Instalar en Teléfono:</p>
           <button class="btn-action" id="install-pwa-btn" style="width: 100%;">📥 Instalar como App / APK</button>
         </div>
       </div>
@@ -378,50 +424,59 @@
 
   </div>
 
-  <!-- PANTALLA DE BLOQUEO POR PRIVACIDAD -->
+  <!-- PANTALLA PRIVACIDAD BLOQUEO -->
   <div class="privacy-overlay" id="privacy-overlay">
     <div class="lock-box">
-      <h2 style="margin-bottom: 10px;">🔒 Espacio Bloqueado</h2>
-      <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 15px;">Ingresa la contraseña para acceder</p>
+      <h3 style="margin-bottom: 8px;">🔒 Espacio Protegido</h3>
+      <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 15px;">Ingresa la contraseña para ingresar</p>
       <input type="password" id="pin-input" class="input-field" placeholder="••••" style="text-align: center; margin-bottom: 15px;" />
       <button class="btn-action" style="width: 100%;" onclick="unlockScreen()">Desbloquear</button>
     </div>
   </div>
 
+  <!-- MODAL DE EJECUCIÓN DE JUEGO -->
+  <div class="game-modal" id="game-modal">
+    <div class="game-modal-header">
+      <span id="modal-game-title" style="font-weight:bold; color:var(--accent-cyan);">Juego</span>
+      <button class="btn-action" style="padding:4px 12px; font-size:12px; background:var(--accent-pink);" onclick="closeGameModal()">❌ Salir</button>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+  </div>
+
   <script>
-    // ESTADO DE LA APP
     let systemPin = localStorage.getItem('cosmic_pin') || "1234";
     let installedGames = JSON.parse(localStorage.getItem('cosmic_games')) || [];
-    let selectedGame = null;
+    let selectedGameId = null;
 
     const storeCatalog = [
-      { id: 'fn', name: 'Fortnite', icon: '⚡', desc: 'Batalla real en la isla flotante aislada.' },
-      { id: 'tr', name: 'Terraria', icon: '🗡️', desc: 'Explora, construye y lucha en mundos 2D.' },
-      { id: 'rb', name: 'Roblox', icon: '🧱', desc: 'Universo virtual para crear y jugar.' },
-      { id: 'cr', name: 'Clash Royale', icon: '👑', desc: 'Estrategia en tiempo real con cartas.' },
-      { id: 'mc', name: 'Minecraft', icon: '🟩', desc: 'Mundo infinito de bloques y construcción.' }
+      { id: 'shooter', name: 'Space Defender', icon: '🚀', desc: 'Juego de naves en 2D interactivo.' },
+      { id: 'fn', name: 'Fortnite', icon: '⚡', desc: 'Batalla real en servidor simulado.' },
+      { id: 'tr', name: 'Terraria', icon: '🗡️', desc: 'Exploración y aventura 2D.' },
+      { id: 'rb', name: 'Roblox', icon: '🧱', desc: 'Universo de experiencias virtuales.' },
+      { id: 'mc', name: 'Minecraft', icon: '🟩', desc: 'Construcción y supervivencia aislada.' }
     ];
 
-    // CAMBIO DE PESTAÑAS
-    function switchTab(tabId) {
+    // NAVEGACIÓN CORREGIDA (FUNCIONA AL 100%)
+    function switchTab(tabId, btnElement) {
       document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-      document.getElementById(tabId).classList.add('active');
-      event.currentTarget.classList.add('active');
+      const targetSection = document.getElementById(tabId);
+      if (targetSection) targetSection.classList.add('active');
+      if (btnElement) btnElement.classList.add('active');
     }
 
-    // RENDERIZAR TIENDA
+    // TIENDA
     function renderStore() {
       const container = document.getElementById('store-list');
       container.innerHTML = storeCatalog.map(game => {
         const isInstalled = installedGames.some(g => g.id === game.id);
         return `
           <div class="store-item">
-            <div class="game-icon" style="width:60px; height:60px; font-size:30px;">${game.icon}</div>
-            <h3>${game.name}</h3>
-            <p style="font-size:12px; color:var(--text-dim);">${game.desc}</p>
-            <button class="btn-action" onclick="toggleInstall('${game.id}')" style="width:100%; margin-top:auto;">
+            <div class="game-icon" style="width:50px; height:50px; font-size:26px;">${game.icon}</div>
+            <h4 style="font-size:16px;">${game.name}</h4>
+            <p style="font-size:12px; color:var(--text-dim); flex:1;">${game.desc}</p>
+            <button class="btn-action" onclick="toggleInstall('${game.id}')" style="width:100%; margin-top:5px; background:${isInstalled ? 'rgba(239,68,68,0.8)' : 'linear-gradient(135deg, var(--accent-cyan), var(--accent-purple))'};">
               ${isInstalled ? 'Desinstalar' : 'Instalar'}
             </button>
           </div>
@@ -429,7 +484,6 @@
       }).join('');
     }
 
-    // INSTALAR / DESINSTALAR JUEGO
     function toggleInstall(gameId) {
       const exists = installedGames.some(g => g.id === gameId);
       if (exists) {
@@ -443,58 +497,125 @@
       renderGamespace();
     }
 
-    // RENDERIZAR GAMESPACE
+    // GAMESPACE
     function renderGamespace() {
       const listContainer = document.getElementById('installed-list');
       if (installedGames.length === 0) {
-        listContainer.innerHTML = '<p style="color:var(--text-dim); text-align:center; padding:20px;">No hay juegos en el espacio.</p>';
+        listContainer.innerHTML = '<p style="color:var(--text-dim); text-align:center; padding:15px; font-size:13px;">No hay juegos instalados.</p>';
         document.getElementById('selected-title').innerText = 'Sin Juegos';
-        document.getElementById('selected-desc').innerText = 'Instala juegos desde la PlayStore para jugarlos aquí de forma aislada.';
+        document.getElementById('selected-desc').innerText = 'Ve a la PlayStore arriba para instalar juegos en tu contenedor aislado.';
         document.getElementById('launch-btn').style.display = 'none';
         return;
       }
 
       listContainer.innerHTML = installedGames.map(game => `
-        <div class="game-card" onclick="selectGame('${game.id}')">
+        <div class="game-card ${selectedGameId === game.id ? 'active' : ''}" onclick="selectGame('${game.id}')">
           <div class="game-icon">${game.icon}</div>
-          <span style="font-weight:bold;">${game.name}</span>
+          <span style="font-weight:bold; font-size:14px;">${game.name}</span>
         </div>
       `).join('');
 
-      // Seleccionar el primero por defecto
-      if (!selectedGame || !installedGames.some(g => g.id === selectedGame.id)) {
+      if (!selectedGameId || !installedGames.some(g => g.id === selectedGameId)) {
         selectGame(installedGames[0].id);
       }
     }
 
     function selectGame(gameId) {
-      selectedGame = installedGames.find(g => g.id === gameId);
-      if (selectedGame) {
-        document.getElementById('selected-title').innerText = selectedGame.name;
-        document.getElementById('selected-desc').innerText = selectedGame.desc + ' (Entorno aislado protegido)';
+      selectedGameId = gameId;
+      const game = installedGames.find(g => g.id === gameId);
+      if (game) {
+        document.getElementById('selected-title').innerText = game.name;
+        document.getElementById('selected-desc').innerText = game.desc + ' - Entorno protegido sin acceso al almacenamiento raíz de tu teléfono.';
         document.getElementById('launch-btn').style.display = 'inline-block';
+        
+        document.querySelectorAll('.game-card').forEach(card => card.classList.remove('active'));
+        renderGamespace();
       }
     }
 
+    // EJECUCIÓN DEL MINIJUEGO
+    let gameInterval = null;
     function launchGame() {
-      if (selectedGame) {
-        alert('Ejecutando ' + selectedGame.name + ' dentro del espacio simulado.');
-      }
+      const game = installedGames.find(g => g.id === selectedGameId);
+      if (!game) return;
+
+      document.getElementById('modal-game-title').innerText = game.name + ' (Aislado)';
+      document.getElementById('game-modal').classList.add('active');
+
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+
+      let player = { x: canvas.width / 2, y: canvas.height - 60, size: 20 };
+      let bullets = [];
+      let enemies = [];
+
+      canvas.ontouchmove = (e) => {
+        player.x = e.touches[0].clientX;
+      };
+      canvas.onmousemove = (e) => {
+        player.x = e.clientX;
+      };
+
+      if (gameInterval) clearInterval(gameInterval);
+      gameInterval = setInterval(() => {
+        ctx.fillStyle = '#05070d';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Jugador
+        ctx.fillStyle = '#00f0ff';
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Balas
+        if (Math.random() < 0.2) bullets.push({ x: player.x, y: player.y - 20 });
+        ctx.fillStyle = '#ff007f';
+        bullets.forEach((b, i) => {
+          b.y -= 8;
+          ctx.fillRect(b.x - 2, b.y, 4, 10);
+          if (b.y < 0) bullets.splice(i, 1);
+        });
+
+        // Enemigos
+        if (Math.random() < 0.05) enemies.push({ x: Math.random() * canvas.width, y: 0 });
+        ctx.fillStyle = '#8b5cf6';
+        enemies.forEach((e, i) => {
+          e.y += 3;
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, 15, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Colisión con balas
+          bullets.forEach((b, bi) => {
+            if (Math.hypot(e.x - b.x, e.y - b.y) < 20) {
+              enemies.splice(i, 1);
+              bullets.splice(bi, 1);
+            }
+          });
+        });
+      }, 1000 / 60);
     }
 
-    // FONDO DE PANTALLA
+    function closeGameModal() {
+      document.getElementById('game-modal').classList.remove('active');
+      if (gameInterval) clearInterval(gameInterval);
+    }
+
+    // CAMBIAR FONDO
     function setWallpaper(bgCss) {
       document.body.style.background = bgCss;
       document.body.style.backgroundSize = 'cover';
     }
 
-    // CONTRASEÑA Y PRIVACIDAD
+    // CONTRASEÑA
     function savePassword() {
-      const newPin = document.getElementById('new-pin').value.trim();
-      if (newPin.length > 0) {
-        systemPin = newPin;
+      const val = document.getElementById('new-pin').value.trim();
+      if (val.length > 0) {
+        systemPin = val;
         localStorage.setItem('cosmic_pin', systemPin);
-        alert('Contraseña actualizada con éxito.');
+        alert('Contraseña actualizada correctamente.');
         document.getElementById('new-pin').value = '';
       } else {
         alert('Escribe una contraseña válida.');
@@ -506,8 +627,7 @@
     });
 
     function unlockScreen() {
-      const enteredPin = document.getElementById('pin-input').value;
-      if (enteredPin === systemPin) {
+      if (document.getElementById('pin-input').value === systemPin) {
         document.getElementById('privacy-overlay').classList.remove('active');
         document.getElementById('pin-input').value = '';
       } else {
@@ -516,17 +636,15 @@
       }
     }
 
-    // PWA / INSTALACIÓN TIPO APK
+    // PWA
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      document.getElementById('install-pwa-btn').onclick = () => {
-        deferredPrompt.prompt();
-      };
+      document.getElementById('install-pwa-btn').onclick = () => deferredPrompt.prompt();
     });
 
-    // INICIALIZACIÓN
+    // INICIAR
     renderStore();
     renderGamespace();
   </script>

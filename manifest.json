@@ -1,0 +1,16 @@
+{
+  "short_name": "YouShouYan",
+  "name": "You Shou Yan - Parallel Engine",
+  "icons": [
+    {
+      "src": "https://static.tvtropes.org/pmwiki/pub/images/fabulous_beasts.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#04030a",
+  "theme_color": "#04030a",
+  "display": "standalone",
+  "orientation": "portrait"
+}

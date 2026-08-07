@@ -3,25 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Cosmic Play Store & GameSpace</title>
+  <title>Cosmic GameSpace & Play Store</title>
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
-      --bg-dark: #0f0f15;
-      --bg-card: #181824;
-      --accent-blue: #01875f; /* Color oficial Play Store */
+      --bg-dark: #080711;
+      --bg-card: #121026;
+      --accent-red: #ff0055;
       --accent-cyan: #00f0ff;
       --accent-purple: #8ab4f8;
+      --accent-green: #01875f;
       --text-main: #ffffff;
       --text-dim: #9aa0a6;
-      --border-color: rgba(255, 255, 255, 0.1);
+      --border-color: rgba(255, 255, 255, 0.12);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
@@ -35,10 +36,10 @@
       overflow: hidden;
     }
 
-    /* BARRA SUPERIOR PLAY STORE */
+    /* BARRA SUPERIOR MODO PLAYSTORE */
     .store-header {
       padding: 12px 16px 8px;
-      background: #1f1f2e;
+      background: #121020;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -49,7 +50,7 @@
     .search-bar-container {
       display: flex;
       align-items: center;
-      background: #2c2c3e;
+      background: #1c1a32;
       border-radius: 28px;
       padding: 6px 16px;
       gap: 12px;
@@ -60,7 +61,7 @@
       background: transparent;
       border: none;
       color: #fff;
-      font-size: 15px;
+      font-size: 14px;
       outline: none;
     }
 
@@ -68,7 +69,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #a855f7, #3b82f6);
+      background: linear-gradient(135deg, #ff0055, #8ab4f8);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -76,18 +77,16 @@
       font-size: 14px;
     }
 
-    /* PESTAÑAS DE CATEGORÍA SUPERIOR */
     .top-categories {
       display: flex;
-      gap: 20px;
+      gap: 18px;
       overflow-x: auto;
       scrollbar-width: none;
-      padding-bottom: 4px;
     }
     .top-categories::-webkit-scrollbar { display: none; }
 
     .cat-pill {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-dim);
       white-space: nowrap;
       cursor: pointer;
@@ -96,88 +95,141 @@
     }
 
     .cat-pill.active {
-      color: var(--accent-purple);
-      border-bottom-color: var(--accent-purple);
+      color: var(--accent-cyan);
+      border-bottom-color: var(--accent-cyan);
       font-weight: bold;
     }
 
-    /* CONTENIDO PRINCIPAL SCROLLABLE */
+    /* CONTENEDOR DE VISTAS */
     .main-content {
       flex: 1;
       overflow-y: auto;
       padding: 16px;
-      padding-bottom: 80px;
+      padding-bottom: 75px;
     }
 
-    .section-title {
-      font-size: 17px;
-      font-weight: bold;
-      margin: 18px 0 12px;
+    /* MODO GAMESPACE (ESTILO VIDEO ORIGINAL) */
+    .gamespace-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      gap: 16px;
+      background: radial-gradient(circle at center, #1b0a2a 0%, #05030a 100%);
+      padding: 15px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 0, 85, 0.3);
+      box-shadow: 0 0 25px rgba(255, 0, 85, 0.15);
+    }
+
+    .gs-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    /* CARDS DE JUEGOS Y APPS */
+    .gs-title {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, #ff0055, #00f0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gs-body {
+      display: flex;
+      flex: 1;
+      gap: 15px;
+    }
+
+    .gs-sidebar {
+      width: 140px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+    }
+
+    .gs-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .gs-card.active {
+      border-color: var(--accent-red);
+      background: rgba(255, 0, 85, 0.15);
+      box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+    }
+
+    .gs-preview {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* CARDS DE PLAYSTORE */
+    .section-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 16px 0 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     .horizontal-scroll {
       display: flex;
-      gap: 14px;
+      gap: 12px;
       overflow-x: auto;
       scrollbar-width: none;
-      padding-bottom: 8px;
     }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
 
-    .app-card-vert {
+    .item-card-vert {
       width: 110px;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       cursor: pointer;
     }
 
-    .app-icon {
+    .item-icon {
       width: 110px;
       height: 110px;
-      border-radius: 22px;
+      border-radius: 20px;
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 42px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      font-size: 40px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
       overflow: hidden;
     }
 
-    .app-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .app-title {
-      font-size: 13px;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .app-meta {
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    /* NAVEGACIÓN INFERIOR ESTILO GOOGLE PLAY */
+    /* BARRA INFERIOR DE NAVEGACIÓN */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 65px;
-      background: #181824;
+      height: 60px;
+      background: #121020;
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -189,63 +241,39 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       color: var(--text-dim);
-      font-size: 11px;
+      font-size: 10px;
       cursor: pointer;
-      width: 20%;
     }
 
     .nav-item.active {
-      color: var(--accent-purple);
+      color: var(--accent-cyan);
       font-weight: bold;
     }
 
     .nav-icon {
-      font-size: 20px;
-      padding: 4px 16px;
-      border-radius: 16px;
+      font-size: 18px;
+      padding: 3px 14px;
+      border-radius: 14px;
     }
 
     .nav-item.active .nav-icon {
-      background: rgba(138, 180, 248, 0.2);
+      background: rgba(0, 240, 255, 0.15);
     }
 
-    /* BOTONES ACCIÓN */
-    .btn-install {
-      background: var(--accent-blue);
+    .btn-main {
+      background: linear-gradient(135deg, var(--accent-red), #ff5500);
       color: #fff;
       border: none;
-      padding: 6px 16px;
-      border-radius: 18px;
-      font-size: 12px;
+      padding: 10px 20px;
+      border-radius: 12px;
       font-weight: bold;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 0, 85, 0.4);
     }
 
-    /* MODAL DEL CREADOR DE JUEGOS */
-    .creator-form {
-      background: var(--bg-card);
-      padding: 20px;
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      border: 1px solid var(--border-color);
-    }
-
-    .input-field, textarea {
-      width: 100%;
-      background: #0d0d14;
-      border: 1px solid var(--border-color);
-      padding: 10px 14px;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
-    }
-
-    /* VENTANA DEL JUEGO */
+    /* VENTANA MODAL DEL JUEGO / CÓMIC */
     .game-modal {
       position: fixed;
       inset: 0;
@@ -261,11 +289,12 @@
 
     .game-header {
       height: 48px;
-      background: #181824;
+      background: #121020;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 16px;
+      border-bottom: 1px solid var(--border-color);
     }
 
     iframe {
@@ -278,11 +307,11 @@
 </head>
 <body>
 
-  <!-- BARRA SUPERIOR CON BUSCADOR -->
-  <div class="store-header">
+  <!-- BARRA SUPERIOR PLAY STORE -->
+  <div class="store-header" id="store-header">
     <div class="search-bar-container">
       <span style="color: var(--text-dim);">🔍</span>
-      <input type="text" id="global-search" class="search-input" placeholder="Buscar juegos, apps, libros..." oninput="filterContent()" />
+      <input type="text" id="global-search" class="search-input" placeholder="Buscar juegos, cómics, anime..." oninput="renderView()" />
       <div class="profile-avatar">A</div>
     </div>
 
@@ -294,28 +323,22 @@
     </div>
   </div>
 
-  <!-- CONTENIDO PRINCIPAL DINÁMICO -->
-  <div class="main-content" id="main-view">
-    <!-- Se genera con JavaScript -->
-  </div>
+  <!-- VISTA PRINCIPAL DINÁMICA -->
+  <div class="main-content" id="main-view"></div>
 
   <!-- NAVEGACIÓN INFERIOR NATIVA -->
   <div class="bottom-nav">
+    <div class="nav-item" onclick="switchNav('gamespace', this)">
+      <div class="nav-icon">🚀</div>
+      <span>GameSpace</span>
+    </div>
     <div class="nav-item active" onclick="switchNav('juegos', this)">
       <div class="nav-icon">🎮</div>
       <span>Juegos</span>
     </div>
-    <div class="nav-item" onclick="switchNav('apps', this)">
-      <div class="nav-icon">📱</div>
-      <span>Apps</span>
-    </div>
-    <div class="nav-item" onclick="switchNav('buscar', this)">
-      <div class="nav-icon">🔍</div>
-      <span>Buscar</span>
-    </div>
     <div class="nav-item" onclick="switchNav('libros', this)">
       <div class="nav-icon">📚</div>
-      <span>Libros</span>
+      <span>Cómics/Manga</span>
     </div>
     <div class="nav-item" onclick="switchNav('creador', this)">
       <div class="nav-icon">🛠️</div>
@@ -323,107 +346,138 @@
     </div>
   </div>
 
-  <!-- MODAL PARA JUGAR -->
+  <!-- MODAL PARA JUGAR O LEER CÓMICS -->
   <div class="game-modal" id="game-modal">
     <div class="game-header">
-      <span id="modal-game-title" style="font-weight: bold;">Juego</span>
-      <button onclick="closeGame()" style="background: #ff0055; color: white; border: none; padding: 6px 14px; border-radius: 12px; font-weight: bold;">✕ Salir</button>
+      <span id="modal-title" style="font-weight: bold; color: var(--accent-cyan);">Contenido</span>
+      <button onclick="closeModal()" style="background: var(--accent-red); color: white; border: none; padding: 6px 14px; border-radius: 10px; font-weight: bold;">✕ Salir</button>
     </div>
-    <iframe id="game-iframe" src=""></iframe>
+    <iframe id="content-iframe" src=""></iframe>
   </div>
 
   <script>
-    // BASE DE DATOS DE JUEGOS Y LIBROS (+1000 SIMULADOS CON CATEGORÍAS)
-    let gamesList = [
-      { id: 'tetris', name: 'Tetris Cube 3D', icon: '🧩', rating: '4.8 ⭐', type: 'juegos', desc: 'El clásico Tetris optimizado para móvil.', url: 'https://tetris.com/play-tetris' },
-      { id: 'pacman', name: 'Pac-Man Retro', icon: '🟡', rating: '4.7 ⭐', type: 'juegos', desc: 'Esquiva fantasmas en el espacio.', url: 'https://freepacman.org/' },
-      { id: '2048', name: '2048 Cosmic', icon: '🔢', rating: '4.9 ⭐', type: 'juegos', desc: 'Juego de números y lógica.', url: 'https://play2048.co/' },
-      { id: 'snake', name: 'Space Snake', icon: '🐍', rating: '4.5 ⭐', type: 'juegos', desc: 'La serpiente espacial clásica.', url: 'https://playsnake.org/' },
-      { id: 'clash', name: 'Clash Royale Web', icon: '👑', rating: '4.6 ⭐', type: 'juegos', desc: 'Estrategia en tiempo real.', url: 'https://play2048.co/' }
+    // BASE DE DATOS LOCAL
+    let gsGames = [
+      { id: 'fn', name: 'Fortnite', icon: '⚡', desc: 'Battle Royale en el espacio.', url: 'https://play2048.co/' },
+      { id: 'tr', name: 'Terraria', icon: '🌳', desc: 'Exploración y construcción 2D.', url: 'https://playsnake.org/' },
+      { id: 'rb', name: 'Roblox', icon: '🟥', desc: 'Universo virtual sandbox.', url: 'https://freepacman.org/' },
+      { id: 'cr', name: 'Clash Royale', icon: '👑', desc: 'Estrategia en tiempo real.', url: 'https://play2048.co/' },
+      { id: 'dl', name: 'DL2026', icon: '⚽', desc: 'Fútbol espacial táctico.', url: 'https://tetris.com/play-tetris' }
     ];
 
-    let booksList = [
-      { id: 'b1', name: 'Imperio de Roca', icon: '📖', price: 'USD 0.06', desc: 'Cómic de ciencia ficción.' },
-      { id: 'b2', name: 'Heartstopper', icon: '📚', price: 'USD 14.99', desc: 'Novela gráfica.' },
-      { id: 'b3', name: 'Iron Man: Extremis', icon: '📕', price: 'USD 10.99', desc: 'Cómic Marvel Oficial.' },
-      { id: 'b4', name: 'El Poder del Ahora', icon: '📘', price: 'USD 11.99', desc: 'Libro de superación personal.' }
+    let comicsList = [
+      { id: 'fb', name: 'Fabulous Beasts (Fei Ren Zai)', icon: '🐉', type: 'Manhua', desc: 'Monstruos mitológicos en la vida moderna.', url: 'https://m.youtube.com/results?search_query=fabulous+beasts+fei+ren+zai+esp' },
+      { id: 'sp1', name: 'Spider-Man: Spider-Verse', icon: '🕷️', type: 'Cómic Marvel', desc: 'Aventuras a través del Multiverso.', url: 'https://m.youtube.com/results?search_query=spiderman+comic+audiocomic' },
+      { id: 'an1', name: 'Jujutsu Kaisen Anime', icon: '🔥', type: 'Anime', desc: 'Hechiceros y maldiciones.', url: 'https://m.youtube.com/results?search_query=jujutsu+kaisen+capitulo+1+español' }
     ];
 
+    let selectedGsId = gsGames[0].id;
     let currentTab = 'juegos';
 
     function renderView() {
       const container = document.getElementById('main-view');
       const searchVal = document.getElementById('global-search').value.toLowerCase();
 
-      if (currentTab === 'juegos' || currentTab === 'apps') {
-        const filtered = gamesList.filter(g => g.name.toLowerCase().includes(searchVal));
-        
-        container.innerHTML = `
-          <div class="section-title">
-            <span>Recomendados para ti</span>
-            <span style="font-size:12px; color:var(--accent-purple);">Ver todo</span>
-          </div>
-          <div class="horizontal-scroll">
-            ${filtered.map(g => `
-              <div class="app-card-vert" onclick="playGame('${g.url}', '${g.name}')">
-                <div class="app-icon">${g.icon}</div>
-                <div class="app-title">${g.name}</div>
-                <div class="app-meta">${g.rating}</div>
-              </div>
-            `).join('')}
-          </div>
+      if (currentTab === 'gamespace') {
+        document.getElementById('store-header').style.display = 'none';
+        const selected = gsGames.find(g => g.id === selectedGsId) || gsGames[0];
 
-          <div class="section-title">
-            <span>Juegos populares</span>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 12px;">
-            ${filtered.map(g => `
-              <div style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-card); padding:10px; border-radius:14px;" onclick="playGame('${g.url}', '${g.name}')">
-                <div style="display:flex; align-items:center; gap:12px;">
-                  <div class="app-icon" style="width:50px; height:50px; font-size:24px;">${g.icon}</div>
-                  <div>
-                    <div style="font-weight:bold; font-size:14px;">${g.name}</div>
-                    <div style="font-size:11px; color:var(--text-dim);">${g.desc}</div>
+        container.innerHTML = `
+          <div class="gamespace-container">
+            <div class="gs-header">
+              <span class="gs-title">GAMESPACE 8.5.1</span>
+              <span style="font-size:11px; color:var(--accent-cyan);">MODO ENTORNO AISLADO</span>
+            </div>
+            <div class="gs-body">
+              <div class="gs-sidebar">
+                ${gsGames.map(g => `
+                  <div class="gs-card ${g.id === selectedGsId ? 'active' : ''}" onclick="selectGsGame('${g.id}')">
+                    <span style="font-size:20px;">${g.icon}</span>
+                    <span style="font-size:12px; font-weight:bold;">${g.name}</span>
                   </div>
+                `).join('')}
+              </div>
+              <div class="gs-preview">
+                <div>
+                  <div style="font-size:50px; margin-bottom:10px;">${selected.icon}</div>
+                  <h2 style="text-transform:uppercase; letter-spacing:1px;">${selected.name}</h2>
+                  <p style="font-size:12px; color:var(--text-dim); margin-top:8px;">${selected.desc}</p>
                 </div>
-                <button class="btn-install">Jugar</button>
+                <button class="btn-main" onclick="openContent('${selected.url}', '${selected.name}')">▶ Iniciar Juego</button>
               </div>
-            `).join('')}
+            </div>
           </div>
         `;
-      } else if (currentTab === 'libros') {
-        const filteredB = booksList.filter(b => b.name.toLowerCase().includes(searchVal));
-        container.innerHTML = `
-          <div class="section-title"><span>Cómics y Libros más vendidos</span></div>
-          <div class="horizontal-scroll">
-            ${filteredB.map(b => `
-              <div class="app-card-vert">
-                <div class="app-icon" style="background:#281c36;">${b.icon}</div>
-                <div class="app-title">${b.name}</div>
-                <div class="app-meta" style="color:#00f0ff;">${b.price}</div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      } else if (currentTab === 'creador') {
-        container.innerHTML = `
-          <div class="creator-form">
-            <h2>🛠️ Creador de Juegos HTML5</h2>
-            <p style="font-size:12px; color:var(--text-dim);">Crea tu propio juego introduciendo la URL o tu propio código HTML:</p>
-            <input type="text" id="new-name" class="input-field" placeholder="Nombre del juego..." />
-            <input type="text" id="new-icon" class="input-field" placeholder="Icono Emoji (ej: 🚀)" />
-            <input type="text" id="new-url" class="input-field" placeholder="URL del juego (https://...)" />
-            <button class="btn-install" style="padding:12px; font-size:14px;" onclick="createNewGame()">🚀 Publicar en mi Play Store</button>
-          </div>
-        `;
-      } else if (currentTab === 'buscar') {
-        container.innerHTML = `
-          <div style="text-align:center; padding:40px 20px;">
-            <h3>🔍 Buscador Global</h3>
-            <p style="color:var(--text-dim); font-size:13px; margin-top:8px;">Escribe arriba en el buscador para filtrar juegos y libros instantáneamente.</p>
-          </div>
-        `;
+      } else {
+        document.getElementById('store-header').style.display = 'flex';
+
+        if (currentTab === 'juegos') {
+          const filtered = gsGames.filter(g => g.name.toLowerCase().includes(searchVal));
+          container.innerHTML = `
+            <div class="section-title"><span>Recomendados para ti</span></div>
+            <div class="horizontal-scroll">
+              ${filtered.map(g => `
+                <div class="item-card-vert" onclick="openContent('${g.url}', '${g.name}')">
+                  <div class="item-icon">${g.icon}</div>
+                  <div style="font-size:12px; font-weight:bold;">${g.name}</div>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="section-title"><span>Juegos Populares</span></div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              ${filtered.map(g => `
+                <div style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-card); padding:10px; border-radius:14px;" onclick="openContent('${g.url}', '${g.name}')">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <div class="item-icon" style="width:48px; height:48px; font-size:24px;">${g.icon}</div>
+                    <div>
+                      <div style="font-weight:bold; font-size:13px;">${g.name}</div>
+                      <div style="font-size:11px; color:var(--text-dim);">${g.desc}</div>
+                    </div>
+                  </div>
+                  <button class="btn-main" style="padding:6px 14px; font-size:12px;">Jugar</button>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        } else if (currentTab === 'libros') {
+          const filteredC = comicsList.filter(c => c.name.toLowerCase().includes(searchVal));
+          container.innerHTML = `
+            <div class="section-title"><span>Cómics, Manga y Anime Gratis</span></div>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              ${filteredC.map(c => `
+                <div style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-card); padding:12px; border-radius:14px;" onclick="openContent('${c.url}', '${c.name}')">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <div class="item-icon" style="width:50px; height:50px; font-size:26px; background:#1e142d;">${c.icon}</div>
+                    <div>
+                      <div style="font-weight:bold; font-size:14px;">${c.name}</div>
+                      <div style="font-size:11px; color:var(--accent-purple);">${c.type}</div>
+                      <div style="font-size:11px; color:var(--text-dim);">${c.desc}</div>
+                    </div>
+                  </div>
+                  <button class="btn-main" style="background: linear-gradient(135deg, #00f0ff, #0088ff); color:#000;">Leer/Ver</button>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        } else if (currentTab === 'creador') {
+          container.innerHTML = `
+            <div style="background:var(--bg-card); padding:20px; border-radius:16px; border:1px solid var(--border-color); display:flex; flex-direction:column; gap:12px;">
+              <h3>🛠️ Creador & Editor HTML5 Offline</h3>
+              <p style="font-size:12px; color:var(--text-dim);">Añade tu propio juego o cómic ingresando el título y la URL directa:</p>
+              <input type="text" id="new-title" style="padding:10px; background:#080711; border:1px solid var(--border-color); border-radius:8px; color:#fff;" placeholder="Título del juego/cómic..." />
+              <input type="text" id="new-icon" style="padding:10px; background:#080711; border:1px solid var(--border-color); border-radius:8px; color:#fff;" placeholder="Emoji Icono (ej: 🐉)" />
+              <input type="text" id="new-url" style="padding:10px; background:#080711; border:1px solid var(--border-color); border-radius:8px; color:#fff;" placeholder="URL del contenido (https://...)" />
+              <button class="btn-main" onclick="addNewCustomItem()">🚀 Publicar en mi Play Store</button>
+            </div>
+          `;
+        }
       }
+    }
+
+    function selectGsGame(id) {
+      selectedGsId = id;
+      renderView();
     }
 
     function switchNav(tab, el) {
@@ -433,46 +487,30 @@
       renderView();
     }
 
-    function filterContent() {
-      renderView();
-    }
-
-    function createNewGame() {
-      const name = document.getElementById('new-name').value;
+    function addNewCustomItem() {
+      const title = document.getElementById('new-title').value;
       const icon = document.getElementById('new-icon').value || '🎮';
       const url = document.getElementById('new-url').value;
 
-      if (!name || !url) {
-        alert('Por favor ingresa un nombre y una URL válida.');
-        return;
-      }
+      if (!title || !url) return alert('Por favor llena los campos obligatorios.');
 
-      gamesList.unshift({
-        id: 'custom_' + Date.now(),
-        name: name,
-        icon: icon,
-        rating: '5.0 ⭐',
-        type: 'juegos',
-        desc: 'Juego creado por el usuario.',
-        url: url
-      });
-
-      alert('¡Juego creado y publicado con éxito!');
-      switchNav('juegos', document.querySelectorAll('.nav-item')[0]);
+      gsGames.unshift({ id: 'c_' + Date.now(), name: title, icon: icon, desc: 'Añadido por el usuario.', url: url });
+      alert('¡Publicado con éxito!');
+      switchNav('juegos', document.querySelectorAll('.nav-item')[1]);
     }
 
-    function playGame(url, title) {
-      document.getElementById('modal-game-title').innerText = title;
-      document.getElementById('game-iframe').src = url;
+    function openContent(url, title) {
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('content-iframe').src = url;
       document.getElementById('game-modal').classList.add('active');
     }
 
-    function closeGame() {
+    function closeModal() {
       document.getElementById('game-modal').classList.remove('active');
-      document.getElementById('game-iframe').src = '';
+      document.getElementById('content-iframe').src = '';
     }
 
-    // Inicializar la vista
+    // Inicializar
     renderView();
   </script>
 </body>

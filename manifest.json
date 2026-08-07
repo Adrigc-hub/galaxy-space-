@@ -1,0 +1,20 @@
+{
+  "name": "Cosmic Space OS",
+  "short_name": "CosmicOS",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#05070d",
+  "theme_color": "#00f0ff",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192/00f0ff/000000?text=COSMIC",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512/00f0ff/000000?text=COSMIC",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

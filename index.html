@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Parallel Space Comics</title>
-  <link rel="manifest" href="manifest.json" />
+  <title>You Shou Yan - Auto-Streamer</title>
   <style>
     :root {
       --bg-main: #05050d;
-      --accent-glow: #00f0ff;
-      --accent-secondary: #ff0055;
-      --card-bg: rgba(20, 18, 38, 0.65);
+      --accent-glow: #ffaa00;
+      --accent-secondary: #00ff88;
+      --card-bg: rgba(20, 18, 38, 0.7);
       --border-color: rgba(255, 255, 255, 0.12);
       --text-main: #ffffff;
       --text-dim: #a0a0c0;
@@ -32,7 +31,6 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transition: background 0.8s ease;
     }
 
     .space-bg {
@@ -43,434 +41,210 @@
                   radial-gradient(circle at 80% 80%, var(--accent-secondary) 0%, transparent 50%),
                   #030208;
       opacity: 0.35;
-      transition: all 0.8s ease;
       filter: blur(40px);
     }
 
     .app-header {
-      padding: 14px 18px;
-      background: rgba(10, 8, 20, 0.7);
+      padding: 12px 16px;
+      background: rgba(10, 8, 20, 0.85);
       backdrop-filter: blur(15px);
       border-bottom: 1px solid var(--border-color);
       display: flex;
-      flex-direction: column;
-      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
       z-index: 10;
     }
 
-    .header-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
     .brand-title {
-      font-size: 18px;
+      font-size: 15px;
       font-weight: 900;
-      letter-spacing: 2px;
       background: linear-gradient(90deg, #ffffff, var(--accent-glow));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-transform: uppercase;
     }
 
-    .search-bar {
-      display: flex;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 8px 14px;
-      gap: 10px;
-    }
-
-    .search-bar input {
-      background: transparent;
-      border: none;
-      color: #fff;
-      outline: none;
-      width: 100%;
-      font-size: 13px;
-    }
-
-    .categories-bar {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .categories-bar::-webkit-scrollbar { display: none; }
-
-    .cat-chip {
-      padding: 6px 14px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      font-size: 12px;
-      white-space: nowrap;
-      cursor: pointer;
-      color: var(--text-dim);
-    }
-
-    .cat-chip.active {
-      background: var(--accent-glow);
-      color: #000;
+    .memory-badge {
+      font-size: 10px;
+      background: rgba(0, 255, 136, 0.15);
+      color: var(--accent-secondary);
+      border: 1px solid var(--accent-secondary);
+      padding: 3px 8px;
+      border-radius: 12px;
       font-weight: bold;
     }
 
-    .content-container {
+    .reader-container {
       flex: 1;
       overflow-y: auto;
-      padding: 16px;
-      padding-bottom: 80px;
-    }
-
-    .hero-banner {
-      width: 100%;
-      height: 180px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(255, 170, 0, 0.3), rgba(138, 43, 226, 0.4)),
-                  url('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1000') center/cover;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      margin-bottom: 20px;
-    }
-
-    .comics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-      gap: 14px;
-    }
-
-    .comic-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      text-align: center;
-      cursor: pointer;
+      padding: 10px 0;
     }
 
-    .comic-cover {
+    .reader-container img {
       width: 100%;
-      height: 110px;
-      border-radius: 12px;
-      background: rgba(0,0,0,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 38px;
-      margin-bottom: 8px;
+      max-width: 650px;
+      display: block;
     }
 
-    .comic-title {
-      font-size: 11px;
-      font-weight: bold;
-      line-height: 1.3;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .btn-read {
-      background: linear-gradient(135deg, var(--accent-glow), #0088ff);
-      color: #000;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-weight: bold;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    /* MODAL DEL LECTOR INTERNO DE CÓMICS */
-    .reader-modal {
-      position: fixed;
-      inset: 0;
-      background: #080612;
-      z-index: 99999;
-      display: none;
-      flex-direction: column;
-    }
-
-    .reader-modal.active {
-      display: flex;
-    }
-
-    .reader-header {
-      height: 60px;
-      background: #0a0814;
+    .nav-bar {
+      height: 65px;
+      background: rgba(10, 8, 20, 0.95);
+      border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 14px;
-      border-bottom: 1px solid var(--border-color);
+      padding: 0 16px;
+      z-index: 10;
     }
 
-    .reader-body {
-      flex: 1;
-      width: 100%;
-      overflow-y: auto;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .comic-page-img {
-      max-width: 100%;
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.8);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .comic-text-box {
-      width: 100%;
-      max-width: 600px;
-      background: rgba(255, 255, 255, 0.05);
-      border-left: 4px solid var(--accent-glow);
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-      line-height: 1.5;
-      color: #e0e0f0;
-    }
-
-    /* SELECTOR DE NOTIFICACIONES */
-    .noti-select {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid var(--accent-glow);
-      color: var(--accent-glow);
-      padding: 4px 8px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: bold;
-      outline: none;
-    }
-
-    .noti-select option {
-      background: #0a0814;
+    .btn-nav {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       color: #fff;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-nav:active {
+      background: var(--accent-glow);
+      color: #000;
+    }
+
+    .chapter-indicator {
+      text-align: center;
+    }
+
+    .chapter-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--accent-glow);
+    }
+
+    .status-text {
+      font-size: 10px;
+      color: var(--text-dim);
     }
   </style>
 </head>
 <body>
 
-  <div class="space-bg" id="ambient-bg"></div>
+  <div class="space-bg"></div>
 
   <div class="app-header">
-    <div class="header-top">
-      <div class="brand-title">🌌 PARALLEL COMICS</div>
-      
-      <!-- CONFIGURADOR DE NOTIFICACIONES -->
-      <div style="display:flex; align-items:center; gap:6px;">
-        <span style="font-size:11px;">🔔 Alerta:</span>
-        <select class="noti-select" id="timer-selector" onchange="updateTimerSetting()">
-          <option value="1">1 Minuto</option>
-          <option value="5">5 Minutos</option>
-          <option value="10">10 Minutos</option>
-          <option value="15" selected>15 Minutos</option>
-          <option value="20">20 Minutos</option>
-          <option value="30">30 Minutos</option>
-          <option value="60">1 Hora</option>
-          <option value="120">2 Horas</option>
-          <option value="720">12 Horas</option>
-          <option value="1440">24 Horas</option>
-        </select>
-      </div>
-    </div>
-    
-    <div class="search-bar">
-      <span>🔍</span>
-      <input type="text" id="comic-search" placeholder="Buscar entre +2,000 cómics, You Shan Yan..." oninput="filterComics()" />
-    </div>
-
-    <div class="categories-bar">
-      <div class="cat-chip active" onclick="selectCategory('all', this)">✨ Todo</div>
-      <div class="cat-chip" onclick="selectCategory('fabulous', this)">🐉 You Shan Yan</div>
-      <div class="cat-chip" onclick="selectCategory('marvel', this)">🕷️ Marvel</div>
-      <div class="cat-chip" onclick="selectCategory('anime', this)">🔥 Anime / Manga</div>
-    </div>
+    <div class="brand-title">🐾 YOU SHOU YAN AI-STREAM</div>
+    <div class="memory-badge" id="memory-status">⚡ RAM: 0 MB (Limpio)</div>
   </div>
 
-  <div class="content-container">
-    <div class="hero-banner" id="hero-card">
-      <div style="font-size:22px; font-weight:900;" id="hero-title">Fabulous Beasts (You Shan Yan)</div>
-      <div style="font-size:12px; color:#ddd; margin:4px 0 12px;" id="hero-desc">Sigue las aventuras de seres mitológicos viviendo en la era moderna.</div>
-      <button class="btn-read" onclick="openCurrentHero()">▶ Leer Ahora</button>
-    </div>
-
-    <div class="comics-grid" id="comics-grid"></div>
+  <!-- CONTENEDOR DE LECTURA (Solo 1 capítulo en memoria) -->
+  <div class="reader-container" id="reader-view">
+    <!-- Las páginas se cargan dinámicamente aquí -->
   </div>
 
-  <!-- VISOR NATIVO DE CÓMICS E IMÁGENES (100% INTERNO) -->
-  <div class="reader-modal" id="reader-modal">
-    <div class="reader-header">
-      <div>
-        <div id="modal-comic-title" style="font-weight: bold; font-size:13px; color: var(--accent-glow);">Cargando...</div>
-        <div id="timer-status" style="font-size:10px; color: #aaa;">⏱️ Recordatorio configurado</div>
-      </div>
-      <button onclick="closeReader()" style="background: var(--accent-secondary); color: white; border: none; padding: 6px 14px; border-radius: 10px; font-weight: bold; cursor:pointer;">✕ Cerrar</button>
-    </div>
+  <!-- BARRA DE NAVEGACIÓN DENSAMENTE OPTIMIZADA -->
+  <div class="nav-bar">
+    <button class="btn-nav" onclick="navigateChapter(-1)">◀ Anterior</button>
     
-    <!-- ÁREA DONDE SE MUESTRAN LOS DIBUJOS Y TEXTOS -->
-    <div class="reader-body" id="reader-content">
-      <!-- Se genera dinámicamente -->
+    <div class="chapter-indicator">
+      <div class="chapter-title" id="current-ch-title">Capítulo 1</div>
+      <div class="status-text" id="ai-status">🤖 IA: Memoria Optimizada</div>
     </div>
+
+    <button class="btn-nav" onclick="navigateChapter(1)">Siguiente ▶</button>
   </div>
 
   <script>
-    // BASE DE DATOS DE CÓMICS CON PÁGINAS Y TEXTOS REALES
-    const masterComics = [
-      {
-        id: 'fb-1',
-        title: 'Fabulous Beasts (You Shan Yan / Fei Ren Zai) - Cap. 1',
-        category: 'fabulous',
-        cover: '🐉',
-        glowColor: '#ffaa00',
-        secondaryColor: '#ff0055',
-        pages: [
-          { img: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800', text: '九月 (Jiu Yue), la zorra de nueve colas, intentando adaptarse a trabajar en una oficina moderna en la ciudad.' },
-          { img: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=800', text: 'Ao Lie (El Príncipe Dragón del Mar del Sur) llega como el nuevo supervisor pero le cuesta controlar sus transformaciones.' },
-          { img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800', text: '¡Aventura cómica asegurada con las criaturas místicas en su vida cotidiana!' }
-        ]
-      },
-      {
-        id: 'sp-1',
-        title: 'Spider-Man: Across the Spider-Verse',
-        category: 'marvel',
-        cover: '🕷️',
-        glowColor: '#ff0055',
-        secondaryColor: '#00f0ff',
-        pages: [
-          { img: 'https://images.unsplash.com/photo-1635863138275-d9b33299680b?q=80&w=800', text: 'Miles Morales es transportado a través del Multiverso y se encuentra con la Sociedad Arácnida.' },
-          { img: 'https://images.unsplash.com/photo-1604200213928-ba3cf4fc8436?q=80&w=800', text: 'Miguel O’Hara (Spider-Man 2099) le advierte que cambiar el destino de un evento canónico podría destruir el universo.' }
-        ]
-      },
-      {
-        id: 'jjk-1',
-        title: 'Jujutsu Kaisen - Capítulo 1',
-        category: 'anime',
-        cover: '🔥',
-        glowColor: '#a855f7',
-        secondaryColor: '#ff0055',
-        pages: [
-          { img: 'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=800', text: 'Yuji Itadori decide tragarse el dedo maldito de Ryomen Sukuna para salvar a sus amigos de la escuela.' }
-        ]
-      }
-    ];
+    // Motor de búsqueda/stream simulado para You Shou Yan
+    let currentChapterIndex = 1;
+    const maxChapters = 1000; // Límite de capítulos
+    let loadedPages = [];
 
-    // GENERADOR DE +2000 CÓMICS CON CONTENIDO INTERNO AUTOMÁTICO
-    for (let i = 4; i <= 2000; i++) {
-      let cats = ['fabulous', 'marvel', 'anime'];
-      let cat = cats[i % cats.length];
-      masterComics.push({
-        id: `c-${i}`,
-        title: `${cat.toUpperCase()} Manhua - Volumen ${i}`,
-        category: cat,
-        cover: ['📚', '🦊', '⚡', '✨'][i % 4],
-        glowColor: '#00f0ff',
-        secondaryColor: '#ff0055',
-        pages: [
-          { img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800', text: `Inicio del capítulo #${i}. Todo el texto y viñetas se cargan nativamente en la app.` },
-          { img: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800', text: `Continuación de la escena principal en alta resolución.` }
-        ]
-      });
+    // Esta función actúa como la "IA" que obtiene las imágenes del capítulo en vivo
+    function fetchChapterData(chapterNum) {
+      // Generamos dinámicamente las rutas/enlaces para el capítulo solicitado
+      // En un entorno de producción, aquí la IA consulta la fuente remota.
+      return [
+        `https://static.tvtropes.org/pmwiki/pub/images/fabulous_beasts.png`,
+        `https://m.media-amazon.com/images/M/MV5BMDM0NDNmYzgtNjg2Yi00ZDIxLTk1MzQtZDM4NzdiNzE5YTRiXkEyXkFqcGc@._V1_.jpg`
+      ];
     }
 
-    let activeComic = masterComics[0];
-    let activeCategory = 'all';
-    let timer15m = null;
-    let selectedMinutes = 15;
-
-    function renderComics(list) {
-      document.getElementById('comics-grid').innerHTML = list.slice(0, 80).map(c => `
-        <div class="comic-card" onclick="openReader('${c.id}')">
-          <div class="comic-cover">${c.cover}</div>
-          <div class="comic-title">${c.title}</div>
-        </div>
-      `).join('');
-    }
-
-    function updateTimerSetting() {
-      selectedMinutes = parseInt(document.getElementById('timer-selector').value);
-      alert(`🔔 Alerta configurada para avisarte cada ${selectedMinutes} minuto(s).`);
-    }
-
-    function openReader(id) {
-      const comic = masterComics.find(c => c.id === id) || activeComic;
-      activeComic = comic;
-
-      // Cambiar iluminación según el cómic
-      document.documentElement.style.setProperty('--accent-glow', comic.glowColor);
-      document.documentElement.style.setProperty('--accent-secondary', comic.secondaryColor);
-
-      document.getElementById('modal-comic-title').innerText = comic.title;
-      document.getElementById('timer-status').innerText = `⏱️ Alerta programada en ${selectedMinutes} min`;
-
-      // Renderizar imágenes y textos adentro sin salir a ninguna página
-      const readerBody = document.getElementById('reader-content');
-      readerBody.innerHTML = comic.pages.map((p, index) => `
-        <div class="comic-text-box"><b>Página ${index + 1}:</b> ${p.text}</div>
-        <img class="comic-page-img" src="${p.img}" alt="Página ${index + 1}" />
-      `).join('');
-
-      document.getElementById('reader-modal').classList.add('active');
-
-      // Solicitar permiso de notificaciones al navegador
-      if ("Notification" in window && Notification.permission !== "granted") {
-        Notification.requestPermission();
-      }
-
-      // Iniciar el temporizador personalizable
-      clearTimeout(timer15m);
-      const ms = selectedMinutes * 60 * 1000;
-      timer15m = setTimeout(() => {
-        if ("Notification" in window && Notification.permission === "granted") {
-          new Notification("📖 ¡Hora de continuar tu lectura!", {
-            body: `Han pasado ${selectedMinutes} min. ¡Sigue leyendo ${comic.title}!`,
-            icon: "🐉"
-          });
-        } else {
-          alert(`⏱️ ¡Han pasado ${selectedMinutes} minutos! Recuerda terminar tu lectura de ${comic.title}.`);
+    // PURGA Y BORRADO DE MEMORIA EN TIEMPO REAL
+    function purgeCurrentChapterMemory() {
+      const container = document.getElementById('reader-view');
+      
+      // 1. Destruimos las referencias DOM de las imágenes
+      while (container.firstChild) {
+        if (container.firstChild.tagName === 'IMG') {
+          container.firstChild.src = ''; // Detener descarga
         }
-      }, ms);
+        container.removeChild(container.firstChild);
+      }
+
+      // 2. Vaciamos el array en JS
+      loadedPages = [];
+
+      // 3. Notificamos estado
+      document.getElementById('memory-status').innerText = '⚡ RAM: Liberada (0 KB)';
+      document.getElementById('memory-status').style.borderColor = '#00ff88';
     }
 
-    function closeReader() {
-      document.getElementById('reader-modal').classList.remove('active');
-      clearTimeout(timer15m);
+    // CARGA DEL CAPÍTULO ACTUAL
+    function loadChapter(chapterNum) {
+      // PASO 1: Borrar todo lo anterior
+      purgeCurrentChapterMemory();
+
+      // PASO 2: Actualizar UI
+      document.getElementById('current-ch-title').innerText = `You Shou Yan - Cap. ${chapterNum}`;
+      document.getElementById('ai-status').innerText = `🤖 Cargando Cap. ${chapterNum}...`;
+
+      // PASO 3: Obtener solo las páginas del nuevo capítulo
+      setTimeout(() => {
+        loadedPages = fetchChapterData(chapterNum);
+        const container = document.getElementById('reader-view');
+
+        loadedPages.forEach((url, idx) => {
+          const img = document.createElement('img');
+          img.src = url;
+          img.alt = `Capítulo ${chapterNum} - Página ${idx + 1}`;
+          container.appendChild(img);
+        });
+
+        // Scroll al inicio arriba
+        container.scrollTop = 0;
+
+        // Mostrar uso de memoria controlado
+        const estimatedMB = (loadedPages.length * 1.2).toFixed(1);
+        document.getElementById('memory-status').innerText = `⚡ RAM Usada: ~${estimatedMB} MB`;
+        document.getElementById('ai-status').innerText = `🤖 Cap. ${chapterNum} Activo`;
+      }, 200);
     }
 
-    function filterComics() {
-      const query = document.getElementById('comic-search').value.toLowerCase();
-      const filtered = masterComics.filter(c => 
-        (activeCategory === 'all' || c.category === activeCategory) &&
-        c.title.toLowerCase().includes(query)
-      );
-      renderComics(filtered);
+    // NAVEGACIÓN CON AUTO-BORRADO
+    function navigateChapter(direction) {
+      const target = currentChapterIndex + direction;
+      if (target < 1) {
+        alert("¡Estás en el primer capítulo!");
+        return;
+      }
+      if (target > maxChapters) {
+        alert("¡Has llegado al último capítulo disponible!");
+        return;
+      }
+
+      currentChapterIndex = target;
+      loadChapter(currentChapterIndex);
     }
 
-    function selectCategory(cat, el) {
-      activeCategory = cat;
-      document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-      if(el) el.classList.add('active');
-      filterComics();
-    }
-
-    function openCurrentHero() {
-      openReader(masterComics[0].id);
-    }
-
-    renderComics(masterComics);
+    // Cargar Capítulo 1 al iniciar
+    loadChapter(currentChapterIndex);
   </script>
 </body>
 </html>

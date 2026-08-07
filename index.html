@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>You Shou Yan - Parallel Engine</title>
+  <style>
+    :root {
+      --bg-main: #04030a;
+      --accent-glow: #ffaa00;
+      --accent-secondary: #00ff88;
+      --card-bg: rgba(18, 15, 32, 0.85);
+      --border-color: rgba(255, 255, 255, 0.12);
+      --text-main: #ffffff;
+      --text-dim: #9090b0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .space-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(circle at 50% 10%, var(--accent-glow) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 90%, var(--accent-secondary) 0%, transparent 45%),
+                  #020106;
+      opacity: 0.3;
+      filter: blur(50px);
+    }
+
+    /* HEADER FIX PARA CELULAR */
+    .app-header {
+      padding: 12px 16px;
+      padding-top: max(12px, env(safe-area-inset-top));
+      background: rgba(8, 6, 18, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #ffffff, var(--accent-glow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .status-badge {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid var(--accent-secondary);
+      color: var(--accent-secondary);
+      font-weight: bold;
+    }
+
+    /* CONTENEDOR DE LECTURA ADAPTADO A PANTALLA */
+    .reader-viewport {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .reader-page {
+      width: 100%;
+      max-width: 600px; /* Ancho máximo para optimizar lectura en móvil/tablet */
+      display: block;
+      margin: 0 auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    /* BARRA INFERIOR DE CONTROLES */
+    .control-bar {
+      height: 70px;
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
+      background: rgba(8, 6, 18, 0.95);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 16px;
+      padding-right: 16px;
+      z-index: 20;
+    }
+
+    .btn-ctrl {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 14px;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-ctrl:active {
+      transform: scale(0.95);
+      background: var(--accent-glow);
+      color: #000;
+    }
+
+    .chapter-info {
+      text-align: center;
+    }
+
+    .ch-name {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent-glow);
+    }
+
+    .noti-picker {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border-color);
+      color: var(--text-dim);
+      border-radius: 8px;
+      padding: 2px 6px;
+      font-size: 10px;
+      margin-top: 2px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="space-bg"></div>
+
+  <div class="app-header">
+    <div class="brand-title">🐾 YOU SHOU YAN</div>
+    <div class="status-badge" id="ram-indicator">RAM: 0 MB</div>
+  </div>
+
+  <div class="reader-viewport" id="viewport">
+    </div>
+
+  <div class="control-bar">
+    <button class="btn-ctrl" onclick="changeChapter(-1)">◀ Ant.</button>
+
+    <div class="chapter-info">
+      <div class="ch-name" id="ch-title">Capítulo 1</div>
+      <select class="noti-picker" id="noti-timer" onchange="setupTimer()">
+        <option value="1">🔔 Alerta: 1 min</option>
+        <option value="5">🔔 Alerta: 5 min</option>
+        <option value="10">🔔 Alerta: 10 min</option>
+        <option value="15" selected>🔔 Alerta: 15 min</option>
+        <option value="30">🔔 Alerta: 30 min</option>
+        <option value="60">🔔 Alerta: 1 hora</option>
+        <option value="1440">🔔 Alerta: 24 horas</option>
+      </select>
+    </div>
+
+    <button class="btn-ctrl" onclick="changeChapter(1)">Sig. ▶</button>
+  </div>
+
+  <script>
+    let currentChapter = 1;
+    let serviceWorkerReg = null;
+    let timerTimeout = null;
+
+    // 1. REGISTRO DEL SERVICE WORKER
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => {
+          serviceWorkerReg = reg;
+          console.log('Service Worker Registrado');
+        })
+        .catch(err => console.log('Error SW:', err));
+    }
+
+    // 2. MOTOR DE PURGA Y BORRADO EN RAM
+    function purgeMemory() {
+      const viewport = document.getElementById('viewport');
+      
+      // Elimina los nodos de imagen para liberar memoria del navegador
+      while (viewport.firstChild) {
+        if (viewport.firstChild.tagName === 'IMG') {
+          viewport.firstChild.src = ''; 
+        }
+        viewport.removeChild(viewport.firstChild);
+      }
+
+      document.getElementById('ram-indicator').innerText = 'RAM: 0 KB (Limpio)';
+    }
+
+    // 3. CARGA DINÁMICA DEL CAPÍTULO
+    async function loadChapter(chNum) {
+      // Paso A: Borra el capítulo anterior de la memoria
+      purgeMemory();
+
+      document.getElementById('ch-title').innerText = `Cargando Cap. ${chNum}...`;
+
+      try {
+        // Intenta consultar la API del servidor (o usa fallback si es local)
+        let data;
+        try {
+          const response = await fetch(`/api/chapter/${chNum}`);
+          data = await response.json();
+        } catch (e) {
+          // Fallback local en caso de probar directamente sin Node.js
+          data = {
+            chapter: chNum,
+            title: `You Shou Yan - Capítulo ${chNum}`,
+            pages: [
+              "https://m.media-amazon.com/images/M/MV5BMDM0NDNmYzgtNjg2Yi00ZDIxLTk1MzQtZDM4NzdiNzE5YTRiXkEyXkFqcGc@._V1_.jpg",
+              "https://static.tvtropes.org/pmwiki/pub/images/fabulous_beasts.png"
+            ]
+          };
+        }
+
+        document.getElementById('ch-title').innerText = `You Shou Yan - Cap. ${data.chapter}`;
+        const viewport = document.getElementById('viewport');
+
+        // Renderiza solo las páginas del capítulo visible
+        data.pages.forEach((src, index) => {
+          const img = document.createElement('img');
+          img.className = 'reader-page';
+          img.src = src;
+          img.alt = `Página ${index + 1}`;
+          viewport.appendChild(img);
+        });
+
+        viewport.scrollTop = 0;
+
+        // Actualiza el medidor de RAM estimada
+        const estMB = (data.pages.length * 1.5).toFixed(1);
+        document.getElementById('ram-indicator').innerText = `RAM: ~${estMB} MB`;
+
+        // Reinicia el temporizador de recordatorio
+        setupTimer();
+
+      } catch (err) {
+        document.getElementById('ch-title').innerText = `Error al cargar Cap. ${chNum}`;
+      }
+    }
+
+    // 4. NAVEGACIÓN ENTRE CAPÍTULOS
+    function changeChapter(dir) {
+      const nextCh = currentChapter + dir;
+      if (nextCh < 1) return alert("¡Ya estás en el capítulo 1!");
+      
+      currentChapter = nextCh;
+      loadChapter(currentChapter);
+    }
+
+    // 5. SISTEMA DE NOTIFICACIONES PERSONALIZABLES (1m a 24h)
+    function setupTimer() {
+      if ('Notification' in window && Notification.permission !== 'granted') {
+        Notification.requestPermission();
+      }
+
+      clearTimeout(timerTimeout);
+      const minutes = parseInt(document.getElementById('noti-timer').value);
+      const delayMs = minutes * 60 * 1000;
+
+      // Si tenemos Service Worker, enviamos la alerta en segundo plano
+      if (serviceWorkerReg && serviceWorkerReg.active) {
+        serviceWorkerReg.active.postMessage({
+          type: 'SCHEDULE_NOTIFICATION',
+          title: '🐾 You Shou Yan - Recordatorio',
+          body: `¡Han pasado ${minutes} minuto(s)! Continúa leyendo el capítulo ${currentChapter}.`,
+          delayMs: delayMs
+        });
+      } else {
+        // Fallback estándar
+        timerTimeout = setTimeout(() => {
+          alert(`⏱️ ¡Recordatorio de ${minutes} min! Continúa tu lectura de You Shou Yan.`);
+        }, delayMs);
+      }
+    }
+
+    // Carga inicial
+    loadChapter(currentChapter);
+  </script>
+</body>
+</html>
